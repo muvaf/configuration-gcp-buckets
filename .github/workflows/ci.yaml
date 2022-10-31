@@ -27,7 +27,7 @@ jobs:
           up login --token ${{ secrets.XPKG_TOKEN }}
 
       - name: Build
-        run: up xpkg build
+        run: up xpkg build --examples-root=./examples --package-root=./configuration
 
       - name: Push
         run: up xpkg push ${{ github.repository }}:${{ github.ref_name }}
