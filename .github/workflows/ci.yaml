@@ -19,7 +19,7 @@ jobs:
 
       - name: Install up CLI
         run: |
-          curl -sLo up.deb "https://cli.upbound.io/stable/${UP_CLI_VERSION}/deb/linux_$(uname -m)/up.deb"
+          curl -fsSLo /usr/bin/up --create-dirs https://cli.upbound.io/stable/${UP_CLI_VERSION}/bin/linux_amd64/up?source=build && chmod +x /usr/bin/up
 
       - name: Login to Upbound
         if: env.XPKG_ACCESS_ID != ''
