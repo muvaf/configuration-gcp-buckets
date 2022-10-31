@@ -18,8 +18,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install up CLI
+        env:
+          VERSION: ${{ env.UP_CLI_VERSION }}
         run: |
-          curl -fsSLo /usr/bin/up --create-dirs https://cli.upbound.io/stable/${UP_CLI_VERSION}/bin/linux_amd64/up?source=build && chmod +x /usr/bin/up
+          curl -sL https://cli.upbound.io | sh && mv up /usr/local/bin/ && up --version
 
       - name: Login to Upbound
         if: env.XPKG_ACCESS_ID != ''
