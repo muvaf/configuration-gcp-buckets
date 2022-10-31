@@ -1,0 +1,50 @@
+apiVersion: storage.muvaf.com/v1alpha1
+kind: GCPBucket
+metadata:
+  name: kubecon-na-2022
+  namespace: default
+spec:
+  location: us
+  compositionRef:
+    name: encrypted.xgcpbuckets.storage.muvaf.com
+  writeConnectionSecretToRef:
+    name: bucket-creds
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-world
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: hello-world
+          image: ghcr.io/muvaf/hello-world-bucket:v0.1.0
+          env:
+            - name: BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: bucket-creds
+                  key: bucketName
+                  optional: false
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: "/creds/creds.json"
+          volumeMounts:
+          - name: creds
+            mountPath: "/creds"
+            readOnly: true
+      volumes:
+      - name: creds
+        secret:
+          secretName: bucket-creds
+          optional: false
+          items:
+          - key: googleCredentialsJSON
+            path: creds.json

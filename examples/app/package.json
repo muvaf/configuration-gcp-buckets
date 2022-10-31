@@ -1,0 +1,10 @@
+{
+    "name": "bucket-example",
+    "version": "1.0.0",
+    "main": "server.js",
+    "license": "Apache-2.0",
+    "dependencies": {
+      "@google-cloud/storage": "^6.5.4",
+      "uuid": "^9.0.0"
+    }
+  }

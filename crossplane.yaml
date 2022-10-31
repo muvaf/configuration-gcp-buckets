@@ -1,0 +1,18 @@
+apiVersion: meta.pkg.crossplane.io/v1alpha1
+kind: Configuration
+metadata:
+  name: gcp-buckets
+  annotations:
+    meta.crossplane.io/maintainer: Muvaffak Onus <me@muvaf.com>
+    meta.crossplane.io/source: github.com/muvaf/configuration-gcp-buckets
+    meta.crossplane.io/license: Apache-2.0
+    meta.crossplane.io/description: |
+      This set of compositions that target a single Bucket API will enable
+      users get bucket service from Google Cloud Storage without having to
+      know ins and bits of the Google Cloud Platform.
+spec:
+  crossplane:
+    version: '>=v1.0.0-0'
+  dependsOn:
+  - provider: xpkg.upbound.io/upbound/provider-gcp
+    version: '>=v0.16.0-0'
