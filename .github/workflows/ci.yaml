@@ -1,12 +1,9 @@
 name: Release
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        required: true
-        type: string
-        description: Version, i.e. v1.0.0
+  push:
+    tags:
+      - v*
 
 env:
   DOCKER_BUILDX_VERSION: 'v0.8.2'
@@ -16,9 +13,6 @@ env:
 jobs:
   release:
     runs-on: ubuntu-22.04
-    needs: detect-noop
-    if: needs.detect-noop.outputs.noop != 'true'
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -36,4 +30,4 @@ jobs:
         run: up xpkg build
 
       - name: Push
-        run: up xpkg push ${{ github.repository }}:${{ inputs.version }}
+        run: up xpkg push ${{ github.repository }}:${{ github.ref_name }}
