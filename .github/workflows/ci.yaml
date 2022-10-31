@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
+        type: string
+        description: Version, i.e. v1.0.0
+
+env:
+  DOCKER_BUILDX_VERSION: 'v0.8.2'
+  XPKG_ACCESS_ID: ${{ secrets.XPKG_ACCESS_ID }}
+  UP_CLI_VERSION: 'v0.14.0'
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    needs: detect-noop
+    if: needs.detect-noop.outputs.noop != 'true'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install up CLI
+        run: |
+          curl -sLo up.deb "https://cli.upbound.io/stable/${UP_CLI_VERSION}/deb/linux_$(uname -m)/up.deb"
+
+      - name: Login to Upbound
+        if: env.XPKG_ACCESS_ID != ''
+        run: |
+          up login --username ${{ secrets.XPKG_ACCESS_ID }} --token ${{ secrets.XPKG_TOKEN }}
+
+      - name: Build
+        run: up xpkg build
+
+      - name: Push
+        run: up xpkg push ${{ github.repository }}:${{ inputs.version }}
