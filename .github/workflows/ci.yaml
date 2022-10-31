@@ -30,4 +30,4 @@ jobs:
         run: up xpkg build --examples-root=./examples --package-root=./configuration
 
       - name: Push
-        run: up xpkg push ${{ github.repository }}:${{ github.ref_name }}
+        run: up xpkg push ${{ github.repository }}:${{ github.ref_name }} --package $(find ./configuration -iname '*.xpkg')
